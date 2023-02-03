@@ -16,10 +16,10 @@ public class Player : MonoBehaviour
     public DIRECTION direction;
     public Vector2Int currentPos,nextPos,startPos;
     int[,] move = {
-      { 0, -1 },@//TOP‚Ìê‡
-      { 1, 0 },   //RIGHT‚Ìê‡
-      { 0, 1 },   //DOWN‚Ìê‡
-      { -1, 0 }   //LEFT‚Ìê‡
+      { 0, -1 },
+      { 1, 0 }, 
+      { 0, 1 }, 
+      { -1, 0 } 
     };
     public MapGenerator mapGenerator;
     [SerializeField]Cursor[] cursors;
