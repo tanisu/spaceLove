@@ -56,6 +56,14 @@ public class SoundManager : MonoBehaviour
 
         bgmAudioSource.Stop();
     }
+    public void StopSE()
+    {
+        seAudioSource.enabled = false;
+    }
+    public void StartSE()
+    {
+        seAudioSource.enabled = true;
+    }
 
     public void LoopSwitch()
     {
@@ -104,7 +112,7 @@ public class BGMSoundData
 {
     public enum BGM
     {
-        MAIN
+        MAIN,
 
 
     }
@@ -124,7 +132,11 @@ public class SESoundData
         MISS,
         DEAD,
         CLICK,
-        CLEAR
+        CLEAR,
+        ITEM,
+        LOGO,
+        TITLE
+
     }
 
     public SE se;

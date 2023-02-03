@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-
+using UnityEngine.Events;
 public class Player : MonoBehaviour
 {
     public enum DIRECTION
@@ -23,11 +23,13 @@ public class Player : MonoBehaviour
     };
     public MapGenerator mapGenerator;
     [SerializeField]Cursor[] cursors;
+    public bool isDead,canPut;
+    public UnityAction<string> GetItem ;
+    
     void Start()
     {
         startPos = currentPos;
         direction = DIRECTION.DOWN;
-
     }
 
 
@@ -50,18 +52,25 @@ public class Player : MonoBehaviour
             SoundManager.I.PlaySE(SESoundData.SE.WALK);
         }
         currentPos = nextPos;
-        mapGenerator.CheckGoal(currentPos);
 
+        mapGenerator.CheckPlayerMoved(currentPos);
+        if (!isDead)
+        {
+            mapGenerator.MoveAliens();
+        }
+        
     }
 
     public void ResetPlayer()
     {
+        
         currentPos = startPos;
         transform.localPosition = mapGenerator.ScreenPos(currentPos);
     }
 
     public void ShowCursor()
     {
+        bool cursorActive = false;
         foreach(DIRECTION d in Enum.GetValues(typeof(DIRECTION)))
         {
             Vector2Int targetPos = currentPos + new Vector2Int(move[(int)d, 0], move[(int)d, 1]);
@@ -69,7 +78,12 @@ public class Player : MonoBehaviour
             if (mapGenerator.GetNextMapType(targetPos) == MapGenerator.MAP_TYPE.WALL)
             {
                 cursors[(int)d].gameObject.SetActive(true);
+                cursorActive = true;
             }
+        }
+        if (!cursorActive)
+        {
+            GameManager.I.CancelMode();
         }
     }
 
@@ -89,8 +103,25 @@ public class Player : MonoBehaviour
         if (mapGenerator.GetNextMapType(pos) == MapGenerator.MAP_TYPE.WALL)
         {
             mapGenerator.PutGround(pos);
+            canPut = true;
         }
+ 
         
         HideCursor();
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Life"))
+        {
+            collision.gameObject.SetActive(false);
+            GetItem?.Invoke(collision.tag);
+        }
+        if (collision.CompareTag("Block"))
+        {
+            collision.gameObject.SetActive(false);
+            GetItem?.Invoke(collision.tag);
+        }
+
     }
 }

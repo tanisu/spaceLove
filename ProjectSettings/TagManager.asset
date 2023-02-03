@@ -6,6 +6,10 @@ TagManager:
   tags:
   - UIController
   - wall
+  - GameManager
+  - Life
+  - Block
+  - Alien
   layers:
   - Default
   - TransparentFX
